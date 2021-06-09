@@ -1,0 +1,216 @@
+﻿@model CooverBoxWebApplication.Models.Boxes.BaseBox
+@{
+    Layout = null;
+    double sumC;
+    double sumP;
+    double sumCMAx;
+    double sumPMAx;
+
+    void packageView(CooverBoxWebApplication.Models.Boxes.Helpers.Package package, CooverBoxWebApplication.Models.Boxes.Helpers.Package packageadd)
+    {
+        @if (package != null)
+        {
+            bool add = packageadd != null;
+            <div class="lead row">
+                <p class="col-xs-12 col-md-4">@($"{package.Name}  {Math.Round(package.Weight / 1000, 3)} кг  Объем {Math.Round(package.Volume, 3)} м3")</p>
+                <p class="col-xs-12 col-md-8">@($"Посылок {package.Count+((add)? packageadd.Count:0)} Общий объем {Math.Round(package.Volume * package.Count + ((add) ? packageadd.Volume * packageadd.Count : 0), 3)} м3")</p>
+            </div>
+        }
+    }
+}
+
+
+@if (Model.TableCostView != null && Model.TableCostView.Count > 0)
+{
+
+    double material = Math.Round((Model.TableCostView.Where(t => !("Работы Админы Клише Нож".Contains(t.Name))).Sum(q => q.dataLines.Where(d => !(q.Name.Contains("Полноцвет") && "Торец".Contains(d.Way))).Sum(d => d.Price)) / Model.N) * 1.1, 2);
+    double ratotu = Math.Round((Model.TableCostView.Where(t => ("Работы".Contains(t.Name))).Sum(q => q.dataLines.Sum(d => d.Price)) / Model.N) * 1.1, 2);
+    double adminu = Math.Round((Model.TableCostView.Where(t => ("Админы".Contains(t.Name))).Sum(q => q.dataLines.Sum(d => d.Price)) / Model.N), 2);
+
+    <div class="jumbotron costviewtop">
+        <div class="lead row">
+            <p class="col-xs-12 col-md-4">@($"Материалы")</p>
+            <p class="col-xs-12 col-md-8">@($"{material}")</p>
+        </div>
+        <div class="lead row">
+            <p class="col-xs-12 col-md-4">@($"Работы")</p>
+            <p class="col-xs-12 col-md-8">@($"{ratotu}")</p>
+        </div>
+        <div class="lead row">
+            <p class="col-xs-12 col-md-4">@($"Админы")</p>
+            <p class="col-xs-12 col-md-8">@($"{adminu}")</p>
+        </div>
+        <div class="lead row">
+            <p class="col-xs-12 col-md-4">@($"Клише")</p>
+            <p class="col-xs-12 col-md-8">@($"{Math.Round((Model.TableCostView.Where(t=>("Клише".Contains(t.Name))).Sum(q => q.dataLines.Sum(d=>d.Price))), 2)}")</p>
+        </div>
+        <div class="lead row text-warning">
+            <p class="col-xs-12 col-md-4">@($"Себестоимость")</p>
+            <p class="col-xs-12 col-md-8">@($"{Math.Round((material+ ratotu+ adminu))} грн")</p>
+        </div>
+    </div>
+    <div class="jumbotron  costviewtop">
+        <div class="lead row">
+            <p class="col-xs-12 col-md-4">@($"Вес готового изделия")</p>
+            <p class="col-xs-12 col-md-8">@($"{Math.Round(Model.Weight, 3)} гр")</p>
+        </div>
+        <div class="lead row">
+            <p class="col-xs-12 col-md-4">@($"Размер готового изделия")</p>
+            <p class="col-xs-12 col-md-8">@($"{Math.Round(Model.OuterSize[0], 2)}x{Math.Round(Model.OuterSize[1], 2)}x{Math.Round(Model.OuterSize[2], 2)} мм")</p>
+        </div>
+        <div class="lead row">
+            <p class="col-xs-12 col-md-4">@($"Объем готового изделия")</p>
+            <p class="col-xs-12 col-md-8">@($"{Math.Round(((Model.OuterSize[0]) / 1000) * ((Model.OuterSize[1]) / 1000) * ((Model.OuterSize[2]) / 1000), 10)} м3")</p>
+        </div>
+    </div>
+
+    <div class="jumbotron costviewtop">
+        <h1 class="col-12 text-center">Экспортная отправка</h1>
+        @{packageView(Model.PostLiker2.UKRPOST_B, Model.PostLiker2.UKRPOST_Badd);}
+
+        @{packageView(Model.PostLiker2.Herson_G20, Model.PostLiker2.Herson_G20add);}
+        @{packageView(Model.PostLiker2.Herson_G30, Model.PostLiker2.Herson_G30add);}
+
+        @{packageView(Model.PostLiker2.Koktebel_G20, Model.PostLiker2.Koktebel_G20add);}
+        @{packageView(Model.PostLiker2.Koktebel_G30, Model.PostLiker2.Koktebel_G30add);}
+
+        <a href="https://www.ukrposhta.ua/ru/katehorii-vidpravlen" target="_blank">Укрпошта</a>
+        <a href="https://www.ukrposhta.ua/ru/taryfy-mizhnarodni-vidpravlennia-posylky" target="_blank">Укрпошта - Тарифы на международные отправления</a>
+    </div>
+
+}
+
+@if (Model.TableCostView != null && Model.TableCostView.Count > 0 && User.Identity.IsAuthenticated && User.IsInRole("admin"))
+{
+    <input class="btn btn-secondary col-md-4 col-12 m-4 costviewtop" type="button" id="tabeldisplaybtn" value="скрыть/показать таблицу" />
+    <div id="tablecostview" display="false" class="table-responsive-sm jumbotron costviewtop d-none">
+        <table class="table table-hover table-sm">
+            <thead>
+                <tr class="table-dark">
+                    <th>Название</th>
+                    <th>Тип</th>
+                    <th>Направление</th>
+                    <th>Количество</th>
+                    <th>Ед. измерения</th>
+                    <th>Цена(грн)</th>
+                    <th>Коментарий</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{sumPMAx = 0; sumCMAx = 0;}
+
+                @foreach (CooverBoxWebApplication.Models.Boxes.Helpers.DataTableLiker var in Model.TableCostView.Where(t => !"Клише Нож".Contains(t.Name)))
+                {
+                    { sumC = 0; sumP = 0; }
+                    <tr class="table-dark">
+                        <td class="w-25">@($"{var.Name}")</td>
+                        <td>@($"{var.Type}")</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    foreach (CooverBoxWebApplication.Models.Boxes.Helpers.DataLineLiker line in var.dataLines)
+                    {
+                        { sumC += line.Count; sumP += line.Price; }
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>@($"{line.Way}")</td>
+                            <td>@($"{line.Count}")</td>
+                            <td>@($"{line.ValueType}")</td>
+                            <td>@($"{line.Price}")</td>
+                            <td>@($"{line.Coment}")</td>
+                        </tr>
+                    }
+                    <tr class="text-white">
+                        <td>сумма</td>
+                        <td></td>
+                        <td />
+                        <td>@($"{sumC}")</td>
+                        <td />
+                        <td>@($"{Math.Round(sumP,2)}")</td>
+                        <td />
+                    </tr>
+                    { sumPMAx += sumP; sumCMAx += sumC; }
+                }
+                <tr class="text-white">
+                    <td>ОБЩАЯ СУММА</td>
+                    <td></td>
+                    <td />
+                    <td></td>
+                    <td />
+                    <td>@($"{Math.Round(sumPMAx,2)}")</td>
+                    <td />
+                </tr>
+                @foreach (CooverBoxWebApplication.Models.Boxes.Helpers.DataTableLiker var in Model.TableCostView.Where(t => "Клише Нож".Contains(t.Name)))
+                {
+                    <tr class="table-dark">
+                        <td class="w-25">@($"{var.Name}")</td>
+                        <td>@($"{var.Type}")</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    foreach (CooverBoxWebApplication.Models.Boxes.Helpers.DataLineLiker line in var.dataLines)
+                    {
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>@($"{line.Way}")</td>
+                            <td>@($"{line.Count}")</td>
+                            <td>@($"{line.ValueType}")</td>
+                            <td>@($"{line.Price}")</td>
+                            <td>@($"{line.Coment}")</td>
+                        </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+}
+@if (Model.TableCostView != null && Model.TableCostView.Count > 0)
+{
+    <div class="custom-control custom-switch costviewdown">
+        <input type="checkbox" class="custom-control-input col-2" id="paperlistcount" />
+        <label class="custom-control-label" for="paperlistcount">расход бумаги</label>
+    </div>
+    <div class="card costviewdown d-none" id="paperlistcountview" display="false">
+        <div class="card-body">
+            @{
+                Dictionary<string, double> materials = new Dictionary<string, double>();
+                foreach (var material in Model.GetInputValueInfo().Where(m => new[] { typeof(PaperWithPrint), typeof(DesignPaper) }.Contains(m.ValueType)))
+                {
+                    if (material.GetValue(Model) == null) continue;
+                    if (material.ValueType == typeof(DesignPaper))
+                    {
+                        if (!materials.Keys.Any(m => m == $"{material.GetValue(Model)}"))
+                        {
+                            materials.Add($"{material.GetValue(Model)}", material.GetValue(Model).FullColor ? 0 : material.GetValue(Model).Price);
+                        }
+                    }
+                    else
+                    {
+                        if (!materials.Keys.Any(m => m == $"{material.GetValue(Model).Paper}"))
+                        {
+                            materials.Add($"{material.GetValue(Model).Paper}", material.GetValue(Model).Paper.FullColor ? 0 : material.GetValue(Model).Paper.Price);
+                        }
+                    }
+                }
+            }
+            @foreach (var varw in materials)
+            {
+                var materialcost = Model.TableCostView?.FirstOrDefault(m => m.Name.Contains(varw.Key));
+                if (materialcost != null)
+                {
+                    <p class="card-text text-white">@($"{varw.Key} {((varw.Value == 0)?$"{Math.Round((double)materialcost.dataLines.Sum(d => d.Price)/materialcost.dataLines.Sum(d => d.Count), 1)}" :$"{varw.Value}")} грн/лист листов {materialcost.dataLines.Sum(d => d.Count)}")</p>
+                }
+            }
+        </div>
+    </div>
+
+}

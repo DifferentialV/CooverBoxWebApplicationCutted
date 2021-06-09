@@ -1,0 +1,32 @@
+﻿@model CooverBoxWebApplication.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Вход в приложение";
+}
+<form asp-action="Login" asp-controller="Account" asp-anti-forgery="true" asp-route-returnUrl="@Model.ReturnUrl">
+    <fieldset>
+        <legend>Вход в приложение</legend>
+        <div class="validation text-warning" asp-validation-summary="ModelOnly"></div>
+        <div class="form-group row">
+            <label class="col-md-3 col-xs-12" asp-for="UserName"></label>
+            <div class="col-md-9 col-xs-12">
+                <input class="form-control" type="text" asp-for="UserName" />
+            </div>
+            <span class="invalid-feedback col-md-12 col-xs-12 text-warning" asp-validation-for="UserName" />
+        </div>
+        <div class="form-group row ">
+            <label class="col-md-3 col-xs-12" asp-for="Password"></label>
+            <div class="col-md-9 col-xs-12">
+                <input type="password" class="form-control" asp-for="Password" />
+            </div>
+            <span class="invalid-feedback col-md-12 col-xs-12 text-warning" asp-validation-for="Password" />
+        </div>
+        <div class="form-check m-2">
+            <label class="form-check-label" asp-for="RememberMe"><input class="form-check-input" type="checkbox" asp-for="RememberMe" /> Запомнить?</label>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Войти" />
+    </fieldset>
+</form>
+@section scripts{
+    <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+}

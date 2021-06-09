@@ -1,0 +1,22 @@
+﻿@model CooverBoxWebApplication.ViewModels.ChangeRoleViewModel
+
+<h2>Изменение ролей и департаментов для пользователя @Model.UserName</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" name="id" value="@Model.UserId" />
+    <div class="form-group">
+        @foreach (var role in Model.AllRoles)
+        {
+            <input type="checkbox" name="roles" value="@role.Name"
+                   @(Model.UserRoles.Contains(role.Name) ? "checked=\"checked\"" : "") />@role.Name <br />
+            }
+    </div>
+    <div class="form-group">
+        @foreach (var departmet in Model.AllDepartments)
+        {
+            <input type="checkbox" name="departnments" value="@departmet.Id"
+                   @(Model.UserDepartments.Contains(departmet.Id) ? "checked=\"checked\"" : "") />@departmet.Name <br />
+            }
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+</form>

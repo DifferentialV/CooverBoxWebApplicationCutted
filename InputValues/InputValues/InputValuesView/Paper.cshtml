@@ -1,0 +1,85 @@
+﻿@model CooverBoxWebApplication.InputValues.InputValuesInfo.PaperInputValue
+@{
+    Layout = null;
+
+}
+@inject CooverBoxWebApplication.Services.MaterialsService materials
+@{
+    IEnumerable<CooverBoxWebApplication.Models.DesignPaper> papers = materials.DesignPapers;
+    papers = papers.OrderByDescending(p => p.ViewPriority);
+    switch (Model.TypeUsing)
+    {
+        case CooverBoxWebApplication.Models.PaperTypeUsing.Sticker: papers = papers.Where(p => p.Sticker).ToList(); break;
+        case CooverBoxWebApplication.Models.PaperTypeUsing.CoverIsolon: papers = papers.Where(p => p.CoverIsolon).ToList(); break;
+        case CooverBoxWebApplication.Models.PaperTypeUsing.DisCarton: papers = papers.Where(p => p.DisCarton).ToList(); break;
+        case CooverBoxWebApplication.Models.PaperTypeUsing.CraftCarton: papers = papers.Where(p => p.CraftCarton).ToList(); break;
+        case CooverBoxWebApplication.Models.PaperTypeUsing.CatHouse: papers = papers.Where(p => p.CatHouse).ToList(); break;
+    }
+    CooverBoxWebApplication.Models.DesignPaper model_value = Model.GetValue(ViewBag._model);
+    bool status = (model_value != null && model_value.Id == 0);
+    int width = 12;
+    if (Model.UserInput)
+        width -= 2;
+    if (Model.SelectForAllMain?.Length > 0)
+        width -= 2;
+}
+<div class="form-group col-auto row">
+    <label class="control-label  col-md-3 col-xs-12" for="@Model.Name">@Model.DisplayName</label>
+    <div class="col-md-9 col-xs-12">
+        <div class="@(Model.UserInput?"row":"")">
+
+            <div @Html.Raw((Model.UserInput ? $"class='col-{width}'" : ""))>
+                <div id="@($"div_{Model.Name}")" class="@(status ? "d-none":"")">
+                    <select class="form-control selectpicker" data-live-search="true"
+                            id=@Model.Name name=@Model.Name
+                            @Html.Raw(Model.SelectForAllMain?.Length > 0 ? $"select-for-all-main='{Model.SelectForAllMain}'" : $"")
+                            @Html.Raw(Model.SelectForAll?.Length > 0 ? $"select-for-all='{Model.SelectForAll}'" : $"")>
+                        @if (!string.IsNullOrEmpty(Model.AddOption))
+                        {
+                            <option value="@Model.AddOption">@Model.AddOption</option>
+
+                        }
+                        @foreach (var paper in papers)
+                        {
+                            <option @Html.Raw((Model.AlwaysDefault == false && model_value?.Id == paper.Id) ? "selected" : "") value="@paper.Id">@($"{paper.Name} {paper.Color} {paper.Density}г/м2")</option>
+                        }
+                    </select>
+                </div>
+
+                @if (Model.UserInput)
+                {
+                    <div id=@($"userpaper_div_{Model.Name}") class="input-group mx-auto row @(status ? "":"d-none")">
+                        <input class="form-control valid col-7" type="text" data-val="true"
+                               id=@($"userpaper_name_{Model.Name}") name=@($"userpaper_name_{Model.Name}")
+                               placeholder='[имя]'
+                               data-val-regex-pattern='^([a-zA-Z0-9\s_\\.\(\):\u0400-\u04FF]*)$'
+                               data-val-regex='Поле должно соотвествовать [имя]'
+                               @Html.Raw(status ? $"value='{model_value.Name}'" : $"") />
+                        <input class="form-control valid col-4 mx-1" type="text" data-val="true"
+                               id=@($"userpaper_price_{Model.Name}") name=@($"userpaper_price_{Model.Name}")
+                               placeholder='[цена, грн/лист]'
+                               data-val-regex-pattern='^(([0-9]*)+(.[0-9]{1,2})?)$'
+                               data-val-regex='Поле должно соотвествовать [цена, грн/лист]'
+                               @Html.Raw(status ? $"value='{model_value.Price}'" : $"") />
+                    </div>
+
+                }
+            </div>
+            @if (Model.UserInput)
+            {
+                <input id=@($"userpaper_button_{Model.Name}") class="form-control btn btn-warning btn-sm col-1 m-1" type="button" value="@(status ? "->":"<-")" onclick="paperUserInput(@($"\'{Model.Name}\'"))" />
+                <input class="d-none" id=@($"status_{Model.Name}") type="checkbox" name=@($"status_{Model.Name}") @Html.Raw(status ? $"checked" : $"") value="True" />
+            }
+            @if (Model.SelectForAllMain?.Length > 0)
+            {
+                <input class="form-control btn btn-success btn-sm col-2 m-1" type="button" value="На все" onclick="selectForAllMainFunc(@($"\'{Model.SelectForAllMain}\'"))" />
+            }
+            @if (Model.UserInput)
+            {
+                <span class="col-12 field-validation-valid text-warning" data-valmsg-for=@($"userpaper_name_{Model.Name}") data-valmsg-replace="true"></span>
+                <span class="col-12 field-validation-valid text-warning" data-valmsg-for=@($"userpaper_price_{Model.Name}") data-valmsg-replace="true"></span>
+            }
+        </div>
+
+    </div>
+</div>

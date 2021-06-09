@@ -1,0 +1,19 @@
+﻿@model CooverBoxWebApplication.InputValues.InputValuesInfo.DateTimeInputValue
+@{
+    Layout = null;
+    DateTime? model_value = Model.GetValue(ViewBag._model);
+
+}
+<div class="form-group col-auto row">
+    <label class="control-label  col-md-3 col-xs-12" for="@Model.Name">@Model.DisplayName</label>
+    <div class="col-md-9 col-xs-12">
+        <input class="form-control valid" data-val="true"
+               id=@Model.Name name=@Model.Name
+               @Html.Raw(Model.Required ? $"data-val-required='Поле является обязательным.'" : $"")
+               @Html.Raw(Model.DateTimeType == "date" ? $"type='date'" : $"{(Model.DateTimeType == "time" ? $"type='time'" : $"type='datetime-local'")}")
+               @Html.Raw(Model.DateTimeType == "date" ? $"value='{model_value.Value.ToString("yyyy-MM-dd")}'" : $"{(Model.DateTimeType == "time" ? $"value='{model_value.Value.ToString("HH:mm:ss")}'" : $"value='{model_value.Value.ToString("yyyy-MM-ddTHH:mm:ss")}'")}")
+               />
+        <span class="col-12 field-validation-valid text-warning span-error-d-none" data-valmsg-for=@Model.Name data-valmsg-replace="true"></span>
+
+    </div>
+</div>

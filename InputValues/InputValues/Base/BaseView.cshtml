@@ -1,0 +1,9 @@
+﻿@model List<CooverBoxWebApplication.InputValues.Base.BaseInputValue>
+@{
+    Layout = null;
+}
+<input type="text" hidden value="@ViewBag._model.GetType().FullName" name="TypeFullName"/>
+@foreach (var item in Model)
+{
+    @await Component.InvokeAsync("InputValue", new { inputValue = item, model = ViewBag._model })
+}

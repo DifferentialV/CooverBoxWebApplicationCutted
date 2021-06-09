@@ -1,0 +1,22 @@
+﻿@{
+    Layout = null;
+    CooverBoxWebApplication.Models.Boxes.BaseBox ModelBox = ViewBag.ModelBox;
+    int BoxFileId = ViewBag.BoxFileId;
+}
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        @@import url('https://likepackage.dp.ua/lib/bootswatch/solar/bootstrap.css');
+    </style>
+</head>
+<fieldset>
+    <legend class="text-white">@($"{ModelBox?.Name} {ModelBox?.X}x{ModelBox?.Y}x{ModelBox?.H} - {ModelBox?.N}  #{BoxFileId}")</legend>
+    <div class="jumbotron">
+        <div class="lead row m-1">
+            <p class="col-md-4">@($"Тип")</p>
+            <p class="col-md-8 text-white">@($"{ModelBox?.TypeBoxe}")</p>
+        </div>
+        @await Component.InvokeAsync("InputValueDisplay", new { model = ModelBox })
+    </div>
+</fieldset>

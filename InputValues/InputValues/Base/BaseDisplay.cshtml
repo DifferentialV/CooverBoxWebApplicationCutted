@@ -1,0 +1,8 @@
+﻿@model List<CooverBoxWebApplication.InputValues.Base.BaseInputValue>
+@{
+    Layout = null;
+}
+@foreach (var item in Model)
+{
+    @await Component.InvokeAsync("InputValueDisplay", new { inputValue = item, model = ViewBag._model })
+}

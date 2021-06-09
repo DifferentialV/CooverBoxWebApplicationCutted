@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Список заказов";
+    int integer = 0;
+    string table_Primary = "primary";
+    string table_Secondary = "secondary";
+}
+<div class="row col-12">
+    <h3 class="col-md-8 col-xs-12">Список заказов</h3>
+</div>
+<div class="table-responsive-sm">
+    <table class="table table-hover table-sm">
+        <thead>
+            <tr>
+                <th>Имя</th>
+                <th>Тип</th>
+                <th>Дата</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CooverBoxWebApplication.Models.BoxDBData var in ViewBag.BoxesSaved)
+            {
+                <tr class="@($"table-{((((integer++)%2)==0)?table_Primary:table_Secondary )}")">
+                    <th>@var.FullName</th>
+                    <th>@var.TypeBox</th>
+
+
+                    <th>@($"{var.DateCreated.ToShortDateString()} ({var.DateCreated.ToShortTimeString()})")</th>
+
+
+                    <th>
+                        <div>
+                            <a asp-action="Preview" asp-controller="Boxes" asp-route-Id=@var.Id class="btn @($"btn-{((((integer)%2)==0)?table_Primary:table_Secondary )}") col-mg-4 col-xs-12 mr-4">Открыть</a>
+                        </div>
+                    </th>
+                    <th>
+                        <div>
+                            <a asp-action="Delete" asp-controller="JSONBox" asp-route-Id=@var.Id class="btn btn-warning col-mg-4 col-xs-12 mr-4"  onclick="return confirm('Вы уверены?')">Удалить</a>
+                        </div>
+                    </th>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

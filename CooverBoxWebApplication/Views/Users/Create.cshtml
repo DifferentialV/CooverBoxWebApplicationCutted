@@ -1,0 +1,37 @@
+﻿@model CooverBoxWebApplication.ViewModels.CreateUserViewModel
+@{
+    ViewData["Title"] = "Добавить пользователя";
+}
+
+<form asp-action="Create" asp-controller="Users" asp-anti-forgery="true">
+    <fieldset>
+        <legend>Регистрация пользователя</legend>
+        <div class="validation text-warning" asp-validation-summary="ModelOnly"></div>
+        <div class="form-group row">
+            <label class="col-md-3 col-xs-12" asp-for="UserName"></label>
+            <div class="col-md-9 col-xs-12">
+                <input class="form-control" type="text" asp-for="UserName" />
+            </div>
+            <span class="col-md-12 col-xs-12 text-warning" asp-validation-for="UserName" />
+        </div>
+        <div class="form-group row ">
+            <label class="col-md-3 col-xs-12" asp-for="Password"></label>
+            <div class="col-md-9 col-xs-12">
+                <input type="password" class="form-control" asp-for="Password" />
+            </div>
+            <span class="col-md-12 col-xs-12 text-warning" asp-validation-for="Password" />
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3 col-xs-12" asp-for="Role"></label>
+            <div class="col-md-9 col-xs-12">
+                <select class="form-control" asp-for="Role" asp-items="ViewBag.Roles"></select>
+            </div>
+            <span class="col-md-12 col-xs-12 text-warning" asp-validation-for="UserName" />
+        </div>
+        <input class="btn btn-secondary" type="submit" value="Добавить пользователя" />
+    </fieldset>
+</form>
+@section scripts{
+    <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+}

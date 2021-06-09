@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Like Package</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/lib/bootswatch/solar/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    @RenderSection("Stylesheet", required: false)
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Like Package</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Переплет</a>
+                            <div class="dropdown-menu  bg-primary">
+                                <a class="nav-link" asp-action="Index" asp-route-Id="TopBotton" asp-controller="Boxes">Крышка Дно</a>
+                                <a class="nav-link" asp-action="Index" asp-route-Id="BookWithString" asp-controller="Boxes">Книга с лентой</a>
+                                <a class="nav-link" asp-action="Index" asp-route-Id="BookValve" asp-controller="Boxes">Книга с клапаном</a>
+                                <a class="nav-link" asp-action="Index" asp-route-Id="Cub" asp-controller="Boxes">Кубик</a>
+                                <a class="nav-link" asp-action="Index" asp-route-Id="OptimusPride" asp-controller="Boxes">Самосборная</a>
+                                <a class="nav-link" asp-action="Index" asp-route-Id="Bumblebee" asp-controller="Boxes">Самосборная упр</a>
+                                <a class="nav-link" asp-action="Index" asp-route-Id="Slider" asp-controller="Boxes">Слайдер</a>
+                                <a class="nav-link" asp-action="Index" asp-route-Id="CircleTopBotton" asp-controller="Boxes">Тубус</a>
+
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">МДФ</a>
+                            <div class="dropdown-menu  bg-primary">
+                                <a class="nav-link" asp-action="Index" asp-route-Id="Casket" asp-controller="Boxes">Шкатулка</a>
+                                <a class="nav-link" asp-action="Index" asp-route-Id="SliderMDF" asp-controller="Boxes">Слайдер МДФ</a>
+                                <a class="nav-link" asp-action="Index" asp-route-Id="BookWithStringMDF" asp-controller="Boxes">Книга с лентой МДФ</a>
+                                <a class="nav-link" asp-action="Index" asp-route-Id="BookValveMDF" asp-controller="Boxes">Книга с клапаном МДФ</a>
+                                <a class="nav-link" asp-action="Index" asp-route-Id="Mercedes" asp-controller="Boxes">Мерседес</a>
+
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Крафт</a>
+                            <div class="dropdown-menu  bg-primary">
+                                <a class="nav-link" asp-action="Index" asp-route-Id="CraftTopBottonOptimus" asp-controller="Boxes">Крышка дно самосборная</a>
+                                <a class="nav-link" asp-action="Index" asp-route-Id="CraftWithEars" asp-controller="Boxes">С ушами</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Гофра</a>
+                            <div class="dropdown-menu  bg-primary">
+                                <a class="nav-link" asp-action="Index" asp-route-Id="GofraTopBottonOptimus" asp-controller="Boxes">Крышка дно самосборная</a>
+                                <a class="nav-link" asp-action="Index" asp-route-Id="GofraWithEars" asp-controller="Boxes">С ушами</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Пакеты</a>
+                            <div class="dropdown-menu  bg-primary">
+                                <a class="nav-link" asp-action="Index" asp-route-Id="CatHouse" asp-controller="Boxes">Пакет :-/</a>
+                            </div>
+                        </li>
+                    }
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("master"))
+                    {
+                        <li class="nav-item active">
+                            <a class="nav-link" asp-area="" asp-controller="JSONBox" asp-action="TextFileView">Тесты</a>
+                        </li>
+                    }
+                </ul>
+                <ul class="navbar-nav">
+                    @if (User.Identity.IsAuthenticated && (User.IsInRole("workmanager") || User.IsInRole("worker")))
+                    {
+                        <li class="nav-item active">
+                            <a class="nav-link"  asp-controller="Department" asp-action="Index">Департаменты</a>
+                        </li>
+                    }
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("master"))
+                    {
+                        <li class="nav-item active">
+                            <a class="nav-link" asp-area="" asp-controller="Orders" asp-action="Index">Сделки</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" asp-area="" asp-controller="Knife" asp-action="Index">Ножы</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" asp-area="" asp-controller="Users" asp-action="Index">Пользователи</a>
+                        </li>
+                    }
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item active">
+                            <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">Войти</a>
+                        </li>
+                    }
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item active">
+                            <a class="nav-link" asp-area="" asp-controller="JSONBox" asp-action="Index">Заказы</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Logout" onclick="return confirm('Вы уверены?')">[@User.Identity.Name]Выйти</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <br />
+    <div class="container">
+        @RenderBody()
+    </div>
+    <br />
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

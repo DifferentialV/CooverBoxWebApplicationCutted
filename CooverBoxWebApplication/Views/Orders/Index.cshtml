@@ -1,0 +1,138 @@
+﻿@{
+    ViewData["Title"] = "Список сделок";
+}
+<div class="row col-12">
+    <h3 class="col-md-8 col-xs-12">Список сделок</h3>
+</div>
+<div class="table-responsive-sm">
+    <div class="d-flex  justify-content-between">
+        <div class="row">
+            <label for="numberorder">Номер сделки</label>
+            <input id="numberorder" class="col-4 form-control" type="number" />
+        </div>
+        <div>
+            <a asp-action="RemoveTrash" asp-controller="Orders" class="btn btn-warning col-mg-4 col-xs-12 mr-4" onclick="return confirm('Вы уверены?')">Очистить</a>
+        </div>
+    </div>
+    <table class="table table-hover table-sm">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Имя</th>
+                <th>Тип</th>
+                <th>Пользователь</th>
+                <th>Дата создания</th>
+                <th>Дата отгрузки</th>
+                <th>
+                    <div>
+                        <input class="btn btn-outline-danger m-1 text-danger" type="button" id="orderChosen" display="False" value="Избранный -" />
+                    </div>
+                </th>
+                <th>
+                    <div>
+                        <input class="btn btn-outline-success m-1 text-success" type="button" id="orderComplete" display="False" value="Выполненный -" />
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CooverBoxWebApplication.Models.BoxOrder var in ViewBag.BoxOrders)
+            {
+            <tr orderid="@($"{var.Id}")" orderComplete="@($"{var.Complete}")" orderChosen="@($"{var.Chosen}")">
+                <th>@var.Id</th>
+
+                @if (Uri.IsWellFormedUriString(var.BitrixLink, UriKind.Absolute))
+                {
+                    <th><a class="text-white" target="_blank" href="@(var.BitrixLink)">@var.FullName</a></th>
+                }
+                else
+                {
+                    <th>@var.FullName</th>
+                }
+
+                <th>@var.TypeBox</th>
+                <th>@var.User.UserName</th>
+                <th>@($"{var.DateCreated.ToShortDateString()} ({var.DateCreated.ToShortTimeString()})")</th>
+                <th>@($"{var.DateShipment.ToShortDateString()} ({var.DateShipment.ToShortTimeString()})")</th>
+
+                <th>
+                    <div>
+                        <a asp-action="Open" asp-controller="Orders" asp-route-OrderId=@var.Id class="btn btn-success col-mg-4 col-xs-12 mr-4">Открыть</a>
+                    </div>
+                </th>
+                <th>
+                    <div class="row">
+                        <a asp-action="Chosen" asp-controller="Orders" asp-route-fileID=@var.Id class=" btn-sm btn btn-danger col-2 m-1">@($"{((var.Chosen)?"+":"-")}")</a>
+                        <a asp-action="Complete" asp-controller="Orders" asp-route-fileID=@var.Id class=" btn-sm btn btn-success col-2 m-1" onclick="return confirm('Вы уверены?')">@($"{((var.Complete)?"+":"-")}")</a>
+                        @if (!var.Opening)
+                        {
+                            <p class="text-warning">0_0</p>
+                        }
+                        @if (!var.Opening && var.DateCreated < DateTime.Now.AddDays(-31))
+                        {
+                            <p class="text-warning">:-(</p>
+                        }
+                    </div>
+                </th>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@section scripts{
+    <script>
+        $("#numberorder").change(function () {
+            var number = $(this).val();
+            var row = $('tbody').find('tr[orderid="' + number + '"]');
+            if (row.length) {
+                $('tbody').find('tr').hide();
+                row.show();
+            }
+            else {
+                $('tbody').find('tr').show();
+                selectordercheck();
+            }
+        });
+        $(document).ready(function () {
+            selectordercheck();
+        });
+        $("#orderChosen").click(function () {
+            if ($(this).attr("display") == "True") {
+                $(this).attr("display", 'False');
+                $(this).val("Избранный -");
+            }
+            else {
+                $(this).attr("display", 'True');
+                $(this).val("Избранный +");
+            }
+            selectordercheck();
+        });
+        $("#orderComplete").click(function () {
+            if ($(this).attr("display") == "True") {
+                $(this).attr("display", 'False');
+                $(this).val("Выполненный -");
+            }
+            else {
+                $(this).attr("display", 'True');
+                $(this).val("Выполненный +");
+            }
+            selectordercheck();
+        });
+        function selectordercheck() {
+            var complete = $("#orderComplete").attr("display");
+            var chosen = $("#orderChosen").attr("display");
+            $('tbody').find('tr').show();
+            if (complete == 'False') {
+                $('tbody').find('tr[orderComplete="True"]').hide();
+            }
+            if (chosen == 'True') {
+                $('tbody').find('tr[orderChosen="False"]:visible').hide();
+            }
+            $('tbody').find('tr').removeClass('table-active');
+            $('tbody').find('tr').removeClass('table-secondary');
+            $('tbody').find('tr:visible:odd').addClass('table-active');
+            $('tbody').find('tr:visible:even').addClass('table-secondary');
+        }
+
+    </script>
+}

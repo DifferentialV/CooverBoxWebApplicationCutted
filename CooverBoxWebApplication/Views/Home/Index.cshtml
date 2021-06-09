@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Like Package";
+}
+
+<div class="text-center">
+    <h2 class="display-3">Welcome</h2>
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <p class="text-center">Доступ к приложению имеют только зарегистрированные пользователи</p>
+        <p class="text-center"></p>
+        <p>Сайт для клиентов <a href="https://CooverBox.in.ua/">Cooverbox.in.ua</a>.</p>
+        <a asp-action="Login" asp-controller="Account" class="btn btn-lg btn-success col-md-4 col-12 m-2">Вход в приложение</a>
+
+    }
+</div>

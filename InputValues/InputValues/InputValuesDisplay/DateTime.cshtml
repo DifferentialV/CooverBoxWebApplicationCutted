@@ -1,0 +1,13 @@
+﻿@model CooverBoxWebApplication.InputValues.InputValuesInfo.DateTimeInputValue
+@{
+    Layout = null;
+    DateTime? model_value = Model.GetValue(ViewBag._model);
+
+}
+@if (model_value != null)
+{
+    <div class="lead row">
+        <p class="col-xs-12 col-md-4">@($"{Model.DisplayName}")</p>
+        <p class="col-xs-12 col-md-8 text-white">@(Model.DateTimeType == "date" ? $"{model_value.Value.ToString("yyyy.MM.dd")}" : $"{(Model.DateTimeType == "time" ? $"{model_value.Value.ToString("HH:mm:ss")}" : $"{model_value.Value.ToString("yyyy.MM.dd HH:mm:ss")}")}")</p>
+    </div>
+}

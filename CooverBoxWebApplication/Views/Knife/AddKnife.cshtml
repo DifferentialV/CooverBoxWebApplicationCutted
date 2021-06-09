@@ -1,0 +1,83 @@
+﻿@model CooverBoxWebApplication.ViewModels.AddKnifeViewModel
+@{
+    ViewData["Title"] = "Добавить нож";
+}
+@if (ViewBag.Addbool != null && ViewBag.Addbool)
+{
+    <p class="col-md-3 col-xs-12 text-success">Успешно добавлен</p>
+}
+<div class="jumbotron">
+    <form asp-action="AddKnife" asp-controller="Knife" asp-anti-forgery="true">
+        <fieldset>
+            <legend>Добавить нож</legend>
+            <div class="validation text-warning" asp-validation-summary="ModelOnly"></div>
+            <div class="form-group row">
+                <label class="col-md-3 col-xs-12" asp-for="X"></label>
+                <div class="col-md-9 col-xs-12">
+                    <input class="form-control" type="text" asp-for="X" />
+                </div>
+                <span class="col-md-12 col-xs-12 text-warning" asp-validation-for="X" />
+            </div>
+            <div class="form-group row">
+                <label class="col-md-3 col-xs-12" asp-for="Y"></label>
+                <div class="col-md-9 col-xs-12">
+                    <input class="form-control" type="text" asp-for="Y" />
+                </div>
+                <span class="col-md-12 col-xs-12 text-warning" asp-validation-for="Y" />
+            </div>
+            <div class="form-group row">
+                <label class="col-md-3 col-xs-12" asp-for="H"></label>
+                <div class="col-md-9 col-xs-12">
+                    <input class="form-control" type="text" asp-for="H" />
+                </div>
+                <span class="col-md-12 col-xs-12 text-warning" asp-validation-for="H" />
+            </div>
+            <div class="form-group row">
+                <label class="col-md-3 col-xs-12" asp-for="T"></label>
+                <div class="col-md-9 col-xs-12">
+                    <input class="form-control" type="text" asp-for="T" />
+                </div>
+                <span class="col-md-12 col-xs-12 text-warning" asp-validation-for="T" />
+            </div>
+            <div class="form-group row">
+                <label class="col-md-3 col-xs-12" asp-for="Name"></label>
+                <div class="col-md-9 col-xs-12">
+                    <input class="form-control" type="text" asp-for="Name" />
+                </div>
+                <span class="col-md-12 col-xs-12 text-warning" asp-validation-for="Name" />
+            </div>
+            <div class="form-group row">
+                <label class="col-md-3 col-xs-12" asp-for="NumberKnife"></label>
+                <div class="col-md-9 col-xs-12">
+                    <input class="form-control" type="text" asp-for="NumberKnife" />
+                </div>
+                <span class="col-md-12 col-xs-12 text-warning" asp-validation-for="NumberKnife" />
+            </div>
+            <div class="form-group row">
+                <label class="col-md-3 col-xs-12" asp-for="KnifeType"></label>
+                <div class="col-md-9 col-xs-12">
+                    <select class="form-control" asp-for="KnifeType" asp-items="ViewBag.KnifeTypes"></select>
+                </div>
+                <span class="col-md-12 col-xs-12 text-warning" asp-validation-for="KnifeType" />
+            </div>
+            <input class="btn btn-secondary m-1" type="submit" value="Добавить нож" />
+        </fieldset>
+    </form>
+</div>
+<div class="jumbotron">
+    <form asp-action="AddKnifeType" method="get" asp-controller="Knife" asp-anti-forgery="true">
+        <fieldset>
+            <legend>Добавить тип ножа</legend>
+            <div class="form-inline form-group">
+                <label>Тип</label>
+                <input class="form-control" data-val="true" data-val-required="Введите Тип" id="NewKnifeType" name="NewKnifeType" type="text" />
+                <span class="col-md-12 col-xs-12 field-validation-valid text-warning" data-valmsg-for="NewKnifeType" data-valmsg-replace="true"></span>
+                <input class="btn btn-secondary m-1" type="submit" value="Добавить" onclick="return confirm('Вы уверены?')" />
+            </div>
+        </fieldset>
+    </form>
+</div>
+@section scripts{
+    <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+}

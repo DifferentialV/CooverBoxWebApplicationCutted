@@ -1,0 +1,25 @@
+﻿@model CooverBoxWebApplication.InputValues.InputValuesInfo.AreaInputValue
+@{
+    Layout = null;
+}
+
+
+<div class="@((Model.Card)?"card border-primary m-1 bg-dark":"jumbotron col-auto") ">
+    @if (!string.IsNullOrEmpty(Model.Header))
+    {
+        if (Model.Card)
+        {
+            <p class="col-12 card-header text-center">@Model.Header</p>
+        }
+        else
+        {
+            <h1 class="col-12 text-center">@Model.Header</h1>
+        }
+    }
+    <div class="@((Model.Card)?"card-body":"")">
+        @foreach (var item in Model.Items)
+        {
+            @await Component.InvokeAsync("InputValue", new { inputValue = item, model = ViewBag._model })
+        }
+    </div>
+</div>

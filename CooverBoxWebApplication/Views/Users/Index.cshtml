@@ -1,0 +1,40 @@
+﻿@model List<CooverBoxWebApplication.ViewModels.UserViewModel>
+@{
+    ViewBag.Title = "Список пользователей";
+}
+
+<a class="col-md-4 col-xs-12 btn btn-primary btn-sm" asp-action="Create">Добавить пользователя</a>
+
+<table class="table  table-sm">
+    <tr><th>Логин</th><th>Роли</th><th>Департаменты</th><th></th></tr>
+    @foreach (var user in Model)
+    {
+        string temp = "";
+        <tr>
+            <td>@user.UserName</td>
+            <td>
+                @foreach (string role in user.Roles)
+                {
+                    temp += role + " ";
+                }
+                @temp.Trim()
+            </td>
+            @{temp = "";
+            }
+            <td>
+                @foreach (string department in user.Departments)
+                {
+                    temp += department + " ";
+                }
+                @temp.Trim()
+            </td>
+            <td>
+                <div class="row">
+                    <a class="btn btn-info col-md-5 col-12 btn-sm m-1 mx-auto" asp-action="ResetPassword" asp-route-id="@user.Id" onclick="return confirm('Вы уверены?')">Сбросить пароль</a>
+                    <a class="btn btn-warning col-md-5 btn-sm col-12 m-1 mx-auto" asp-action="Edit" asp-route-id="@user.Id" onclick="return confirm('Вы уверены?')">Изменить</a>
+                    <a class="btn btn-warning col-md-10 btn-sm col-12 m-1 mx-auto" asp-action="Delete" asp-route-id="@user.Id" onclick="return confirm('Вы уверены?')">Удалить</a>
+                </div>
+            </td>
+        </tr>
+    }
+</table>

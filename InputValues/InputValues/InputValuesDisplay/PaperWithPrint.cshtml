@@ -1,0 +1,12 @@
+﻿@model CooverBoxWebApplication.InputValues.InputValuesInfo.PaperWithPrintInputValue
+@{
+    Layout = null;
+    CooverBoxWebApplication.Models.PaperWithPrint paper = Model.GetValue(ViewBag._model);
+}
+@if (paper != null)
+{
+    <div class="lead row">
+        <p class="col-xs-12 col-md-4">@($"{Model.DisplayName}")</p>
+        <p class="col-xs-12 col-md-8 text-white">@($"{paper} {(paper.Paper.FullColor ?"" : $"{paper.Paper.Price} грн/лист")}".Trim())</p>
+    </div>
+}

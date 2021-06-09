@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "Создание сделки";
+
+}
+
+<form asp-action="DownloadOrder" asp-route-Type="@(ViewBag.BoxType)" asp-controller="Boxes" method="post" asp-anti-forgery="true">
+    <fieldset>
+        <legend>@($"Создание сделки {ViewBag.BoxName}")</legend>
+    </fieldset>
+    <div class="validation text-warning" asp-validation-summary="ModelOnly"></div>
+    <div class="jumbotron col-auto">
+        <div class="form-group col-auto row">
+            <label class="control-label col-md-3 col-xs-12" for="BitrixLink">Ссылка на Bitrix</label>
+            <div class="col-md-9 col-xs-12">
+                <input class="form-control" type="text" id="BitrixLink" name="BitrixLink" data-val="true" data-val-required="Поле является обязательным." value="@(ViewBag.BitrixLink)">
+            </div>
+            <span class="col-md-12 col-xs-12 field-validation-valid text-warning" data-valmsg-for="BitrixLink" data-valmsg-replace="true"></span>
+        </div>
+    </div>
+
+    <div class="row col-12">
+        <a asp-action="Preview" asp-route-Type="@(ViewBag.BoxType)" asp-controller="Boxes" class="btn btn-secondary col-md-4 col-12 m-2">Назад</a>
+        <input class="btn btn-info col-md-4 col-12 m-2" type="submit" value="Создать сделку"  onclick="return confirm('Будет создана сделка. Вы уверены?')"/>
+    </div>
+
+
+</form>
+
+@section scripts{
+    <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+}

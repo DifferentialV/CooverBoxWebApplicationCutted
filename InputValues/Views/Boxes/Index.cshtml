@@ -1,0 +1,22 @@
+﻿@model CooverBoxWebApplication.Models.Boxes.BaseBox
+@{
+    ViewData["Title"] = (string.IsNullOrEmpty(Model.Name))? Model.TypeBoxe:Model.FullName;
+}
+
+<form asp-action="Index" asp-route-Id="@(Model.Id)" asp-controller="Boxes" method="post" asp-anti-forgery="true">
+    <fieldset>
+        <legend class="text-white">@($"{((string.IsNullOrEmpty(Model.Name)) ? Model.TypeBoxe : $"{Model.FullName} ({Model.TypeBoxe})")}")</legend>
+    </fieldset>
+    <div class="validation text-warning" asp-validation-summary="ModelOnly"></div>
+    @await Component.InvokeAsync("InputValue", new { model = Model })
+    <input class="btn btn-secondary" type="submit" value="Далее" />
+
+</form>
+@section stylesheet{
+    <link href="~/lib/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+}
+@section scripts{
+    <script src="~/lib/bootstrap-select/js/bootstrap-select.js"></script>
+    <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+}

@@ -1,0 +1,46 @@
+﻿@model CooverBoxWebApplication.InputValues.InputValuesInfo.AreaInputValue
+@{
+    Layout = null;
+    List<CooverBoxWebApplication.InputValues.Base.BaseInputValue> Func(CooverBoxWebApplication.InputValues.InputValuesInfo.AreaInputValue areaInput)
+    {
+        List<CooverBoxWebApplication.InputValues.Base.BaseInputValue> lis = new List<CooverBoxWebApplication.InputValues.Base.BaseInputValue>();
+        foreach (var item in areaInput.Items)
+        {
+            if (item.GetType() != typeof(CooverBoxWebApplication.InputValues.InputValuesInfo.AreaInputValue))
+            {
+                lis.Add(item);
+            }
+            else
+            {
+                lis.AddRange(Func((CooverBoxWebApplication.InputValues.InputValuesInfo.AreaInputValue)item));
+            }
+        }
+        return lis;
+    }
+}
+@if (!Func(Model).All(i=>i.GetValue(ViewBag._model) is null
+|| (i.GetType() == typeof(CooverBoxWebApplication.InputValues.InputValuesInfo.ListIsolonInputValue)&& i.GetValue(ViewBag._model).Count == 0)
+|| (i.GetType() == typeof(CooverBoxWebApplication.InputValues.InputValuesInfo.NumberInputValue) && i.GetValue(ViewBag._model) == 0)
+|| (i.GetType().Name == typeof(CooverBoxWebApplication.InputValues.InputValuesInfo.EnumDropListInputValue<>).Name && !(i.GetValue(ViewBag._model) != 0 || ((dynamic)i).DisplayNullVisible == false))
+))
+{
+    <div class="@((Model.Card)?"card border-primary m-1 bg-dark":"jumbotron col-auto") ">
+        @if (!string.IsNullOrEmpty(Model.Header))
+        {
+            if (Model.Card)
+            {
+                <p class="col-12 card-header text-center">@Model.Header</p>
+            }
+            else
+            {
+                <h1 class="col-12 text-center">@Model.Header</h1>
+            }
+        }
+        <div class="@((Model.Card)?"card-body":"")">
+            @foreach (var item in Model.Items)
+            {
+                @await Component.InvokeAsync("InputValueDisplay", new { inputValue = item, model = ViewBag._model })
+            }
+        </div>
+    </div>
+}

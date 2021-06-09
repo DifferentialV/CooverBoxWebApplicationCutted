@@ -1,0 +1,53 @@
+﻿@model CooverBoxWebApplication.ViewModels.PostPackageViewModel
+@{
+    ViewData["Title"] = "Упаковка коробочек";
+}
+
+<div class="jumbotron">
+    <form method="post" asp-action="Index" asp-controller="PostPackage" asp-anti-forgery="true">
+        <fieldset>
+            <legend>Размеры коробки</legend>
+            <div class="form-group row">
+                <label class="col-md-3 col-xs-12" asp-for="X"></label>
+                <div class="col-md-9 col-xs-12">
+                    <input class="form-control" asp-for="X" />
+                </div>
+                <span class="col-md-12 col-xs-12 text-warning" asp-validation-for="X" />
+            </div>
+            <div class="form-group row">
+                <label class="col-md-3 col-xs-12" asp-for="Y"></label>
+                <div class="col-md-9 col-xs-12">
+                    <input class="form-control" asp-for="Y" />
+                </div>
+                <span class="col-md-12 col-xs-12 text-warning" asp-validation-for="Y" />
+            </div>
+            <div class="form-group row">
+                <label class="col-md-3 col-xs-12" asp-for="H"></label>
+                <div class="col-md-9 col-xs-12">
+                    <input class="form-control" asp-for="H" />
+                </div>
+                <span class="col-md-12 col-xs-12 text-warning" asp-validation-for="H" />
+            </div>
+            <div class="form-group row">
+                <label class="col-md-3 col-xs-12" asp-for="Weight"></label>
+                <div class="col-md-9 col-xs-12">
+                    <input class="form-control" asp-for="Weight" />
+                </div>
+                <span class="col-md-12 col-xs-12 text-warning" asp-validation-for="Weight" />
+            </div>
+            <div class="form-group row">
+                <label class="col-md-3 col-xs-12" asp-for="N"></label>
+                <div class="col-md-9 col-xs-12">
+                    <input class="form-control" asp-for="N" />
+                </div>
+                <span class="col-md-12 col-xs-12 text-warning" asp-validation-for="N" />
+            </div>
+            <input class="btn btn-secondary m-1" type="submit" value="Далее" />
+        </fieldset>
+    </form>
+</div>
+
+@section scripts{
+    <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+}

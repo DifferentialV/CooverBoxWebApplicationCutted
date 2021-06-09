@@ -1,0 +1,47 @@
+﻿@model CooverBoxWebApplication.Models.Boxes.Helpers.PostLiker2
+@{
+    ViewData["Title"] = $"Упаковка коробочек {Model.Box.X}x{Model.Box.Y}x{Model.Box.H}";
+    void packageView(CooverBoxWebApplication.Models.Boxes.Helpers.Package package, CooverBoxWebApplication.Models.Boxes.Helpers.Package packageadd)
+    {
+        @if (package != null)
+        {
+            bool add = packageadd != null;
+            <div class="lead row">
+                <p class="col-xs-12 col-md-4">@($"{package.Name}  {Math.Round(package.Weight / 1000, 3)} кг  Объем {Math.Round(package.Volume, 3)} м3")</p>
+                <p class="col-xs-12 col-md-8">@($"Посылок {package.Count+((add)? packageadd.Count:0)} Общий объем {Math.Round(package.Volume * package.Count + ((add) ? packageadd.Volume * packageadd.Count : 0), 3)} м3")</p>
+            </div>
+        }
+    }
+}
+
+
+<div class="jumbotron">
+    @if (Model != null)
+    {
+        <div class="jumbotron costviewtop">
+            <h1 class="col-12 text-center">Экспортная отправка</h1>
+            @{packageView(Model.UKRPOST_B, Model.UKRPOST_Badd);}
+
+            @{packageView(Model.Herson_G20, Model.Herson_G20add);}
+            @{packageView(Model.Herson_G30, Model.Herson_G30add);}
+
+            @{packageView(Model.Koktebel_G20, Model.Koktebel_G20add);}
+            @{packageView(Model.Koktebel_G30, Model.Koktebel_G30add);}
+
+
+
+            <a href="https://www.ukrposhta.ua/ru/katehorii-vidpravlen" target="_blank">Укрпошта</a>
+        </div>
+        <form method="post" asp-action="Download" asp-controller="PostPackage" asp-anti-forgery="true">
+            <input class="d-none" name="X" value=@Model.Box.X />
+            <input class="d-none" name="Y" value=@Model.Box.Y />
+            <input class="d-none" name="H" value=@Model.Box.H />
+            <input class="d-none" name="Weight" value=@Model.Weight />
+            <input class="d-none" name="N" value=@Model.N />
+            <input class="btn btn-secondary m-1" type="submit" value="Скачать" />
+
+        </form>
+    }
+
+</div>
+

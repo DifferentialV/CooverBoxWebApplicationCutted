@@ -1,0 +1,18 @@
+﻿@model CooverBoxWebApplication.InputValues.InputValuesInfo.ListIsolonInputValue
+@{
+    Layout = null;
+
+}
+@if (Model.GetValue(ViewBag._model) != null && Model.GetValue(ViewBag._model).Count > 0)
+{
+    <div class="lead row">
+        <p class="col-xs-12 col-md-4">@($"{Model.DisplayName}")</p>
+        <div class="col-xs-12 col-md-8 text-white">
+            @for (int i = 0; i < Model.GetValue(ViewBag._model)?.Count; i++)
+            {
+                <p class="col-xs-12 col-md-8 text-white">@($"{Model.GetValue(ViewBag._model)[i]}")</p>
+            }
+        </div>
+    </div>
+}
+

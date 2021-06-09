@@ -1,0 +1,32 @@
+﻿@model CooverBoxWebApplication.InputValues.InputValuesInfo.NumberInputValue
+@{
+    Layout = null;
+    
+}
+
+<div class="form-group col-auto row">
+    <label class="control-label  col-md-3 col-xs-12" for="@Model.Name">@Model.DisplayName</label>
+    <div class="col-md-9 col-xs-12">
+        <input class="form-control valid" type="text" data-val="true"
+               id=@Model.Name name=@Model.Name
+
+               @Html.Raw(Model.Required?$"data-val-required='Поле является обязательным.'":$"")
+
+               @Html.Raw(Model.Placeholder != null?$"placeholder='{Model.Placeholder}'":$"")
+
+               @Html.Raw(Model.Min != null?$"data-val-range-min='{Model.Min}'":$"data-val-range-min='{int.MinValue}'")
+               @Html.Raw(Model.Max != null?$"data-val-range-max='{Model.Max}'":$"data-val-range-max='{int.MaxValue}'")
+
+               @Html.Raw((Model.Max != null || Model.Min != null)?$"data-val-range='Поле {Model.DisplayName} должно быть {((Model.Min != null)?$"больше {Model.Min}":"")} {((Model.Max != null)?$"меньше {Model.Max}":"")} включительно.'":$"")
+              
+               @Html.Raw($"data-val-regex-pattern='{new Dictionary<Type,string>{ { typeof(int),"^(-)?([1-9][0-9]*)$" },{ typeof(double), "^(-)?([0-9]*)+(.[0-9]{1,2})?$" },{ typeof(int?),"^(-)?([1-9][0-9]*)$" },{ typeof(double?), "^(-)?([0-9]*)+(.[0-9]{1,2})?$" } }[Model.ValueType]}'")
+               @Html.Raw($"data-val-regex='Поле {Model.DisplayName} должно быть {new Dictionary<Type,string>{ { typeof(int),"целым" },{ typeof(double), "действительным" },{typeof(int?),"целым" },{ typeof(double?), "действительным" }, }[Model.ValueType]} числом.'")
+
+
+               value="@Model.GetValue(ViewBag._model)" />
+        <span class="col-12 field-validation-valid text-warning span-error-d-none" data-valmsg-for=@Model.Name data-valmsg-replace="true"></span>
+
+    </div>
+</div>
+
+

@@ -1,0 +1,25 @@
+﻿@model CooverBoxWebApplication.InputValues.InputValuesInfo.RibbonInputValue
+@{
+    Layout = null;
+
+}
+@inject CooverBoxWebApplication.Services.MaterialsService materials
+
+<div class="form-group col-auto row">
+    <label class="control-label  col-md-3 col-xs-12" for="@Model.Name">@Model.DisplayName</label>
+    <div class="col-md-9 col-xs-12">
+        <select class="form-control" type="text"
+                id=@Model.Name name=@Model.Name>
+            @if (!string.IsNullOrEmpty(Model.AddOption))
+            {
+                <option value="@Model.AddOption">@Model.AddOption</option>
+
+            }
+            @foreach (var ribbon in materials.Ribbons)
+            {
+                <option @Html.Raw((Model.AlwaysDefault == false && Model.GetValue(ViewBag._model)?.Id == ribbon.Id) ? "selected" : "") value="@ribbon.Id">@($"{ribbon.Name} {ribbon.Type} {ribbon.Width}мм")</option>
+            }
+
+        </select>
+    </div>
+</div>

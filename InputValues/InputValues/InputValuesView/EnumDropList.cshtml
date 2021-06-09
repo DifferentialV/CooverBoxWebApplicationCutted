@@ -1,0 +1,19 @@
+﻿@model dynamic
+@{
+    Layout = null;
+
+}
+
+<div class="form-group col-auto row">
+    <label class="control-label  col-md-3 col-xs-12" for="@Model.Name">@Model.DisplayName</label>
+    <div class="col-md-9 col-xs-12">
+        <select class="form-control" type="text"
+                id=@Model.Name name=@Model.Name>
+            @foreach (string opn in Model.Options)
+            {
+                <option @Html.Raw((Model.AlwaysDefault == false && Model.GetValue(ViewBag._model) == opn.Trim()) ? "selected" : "") value="@opn.Trim()">@opn.Trim().Replace("_", " ")</option>
+            }
+
+        </select>
+    </div>
+</div>

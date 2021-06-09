@@ -1,0 +1,12 @@
+﻿@model CooverBoxWebApplication.InputValues.InputValuesInfo.ArtHayInputValue
+@{
+    Layout = null;
+
+}
+@if (Model.GetValue(ViewBag._model) != null)
+{
+    <div class="lead row">
+        <p class="col-xs-12 col-md-4">@($"{Model.DisplayName}")</p>
+        <p class="col-xs-12 col-md-8 text-white">@($"{Model.GetValue(ViewBag._model)}")</p>
+    </div>
+}

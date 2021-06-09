@@ -1,0 +1,50 @@
+﻿@model List<CooverBoxWebApplication.Models.Knife>
+@{
+    ViewBag.Title = "Ножы";
+}
+
+<h2>Список ножей</h2>
+<form asp-action="Index" asp-controller="Knife" method="get" asp-anti-forgery="true">
+    <fieldset>
+        <div class="form-inline form-group">
+            <label class="control-label">Размер</label>
+            <input class="form-control" name="X" type="number" />
+            <label class="control-label">x</label>
+            <input class="form-control" name="Y" type="number" />
+            <label class="control-label">x</label>
+            <input class="form-control" name="H" type="number" />
+            <input type="submit" value="Фильтр" class="btn btn-secondary m-1" />
+        </div>
+    </fieldset>
+</form>
+<div class="table-responsive-sm jumbotron">
+    <a asp-controller="Knife" asp-action="AddKnife" type="submit" class="btn btn-primary w-25">Добавить</a>
+    <table class="table table-hover table-sm">
+        <thead>
+            <tr class="table-dark">
+                <th>Размер</th>
+                <th>Толщина картона</th>
+                <th>Примечание</th>
+                <th>Тип</th>
+                <th>Номер штанцформы</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (CooverBoxWebApplication.Models.Knife var in Model)
+            {
+                <tr class="text-white">
+                    <td>@($"{var.X}x{var.Y}x{var.H}")</td>
+                    <td>@($"{var.T}")</td>
+                    <td class="w-25">@($"{var.Name}")</td>
+                    <td>@($"{var.KnifeType.Name}")</td>
+                    <td>@($"{var.NumberKnife}")</td>
+                    <td>
+                        <a asp-action="Delete" asp-controller="Knife" asp-route-ID=@var.Id class="btn btn-warning col-mg-4 col-xs-12 mr-4" onclick="return confirm('Вы уверены?')">Удалить</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

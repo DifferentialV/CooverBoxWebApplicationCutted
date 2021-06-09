@@ -1,0 +1,80 @@
+﻿@model CooverBoxWebApplication.Models.Boxes.BaseBox
+
+@{
+    ViewData["Title"] = $"{Model?.FullName}";
+}
+
+    <fieldset>
+        <legend class="text-white">@($"{Model.FullName} ({Model.TypeBoxe})")</legend>
+
+        <div id="costviewtop" class="text-center"><img src="~/Static/tenor.gif" /></div>
+        <div id="funerror" class="text-center"></div>
+            @await Component.InvokeAsync("InputValueDisplay", new { model = Model })
+        <div id="costviewdown"></div>
+        <div class="row mx-auto col-12">
+            <div class="col-md-6  mx-auto">
+                @if (User.Identity.Name == Model.UserName || User.IsInRole("master"))
+                {
+                    <a asp-action="Index" asp-route-Id="@(Model.Id)" asp-controller="Boxes" class="btn btn-secondary col-12 m-2">Редактировать</a>
+                }
+                <a asp-action="Clone" asp-route-Id="@(Model.Id)" asp-controller="Boxes" class="btn btn-secondary col-12 m-2">Копировать</a>
+            </div>
+            <div class="col-md-6  mx-auto">
+                <a asp-action="Save" asp-route-Id="@(Model.Id)" asp-controller="Boxes" class="btn btn-info col-12 m-2">Сохранить</a>
+                <a asp-action="DownloadDisign" asp-route-Id="@(Model.Id)" asp-controller="Boxes" class="btn btn-info col-12 m-2">Скачать дизайн</a>
+            </div>
+            <div class="row col-12  mx-auto">
+                <a asp-action="DownloadOrder" asp-route-Id="@(Model.Id)" asp-controller="Boxes" class="btn mx-md-auto btn-success col-12 m-2">Создать сделку</a>
+            </div>
+            @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+            {
+                <div class="row col-12  mx-auto">
+                    <a asp-action="Download" asp-route-Id="@(Model.Id)" asp-controller="Boxes" class="btn btn-success col-12 m-2">Скачать</a>
+
+                </div>
+            }
+        </div>
+    </fieldset>
+@section scripts{
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("CostViewJquery", "Boxes", new { Id = Model.Id })",
+                success: function (response) {
+                    $("#costviewtop").replaceWith($(response).filter(".costviewtop"));
+                    $("#costviewdown").replaceWith($(response).filter(".costviewdown"));
+                    $("#funerror").replaceWith($(response).find(".funerror"));
+                    $("fieldset").on("click", "#paperlistcount", function () {
+                        var item = $("#paperlistcountview");
+
+                        if (item.attr("display") == "true") {
+                            item.addClass("d-none")
+                            item.attr("display", false);
+                        } else {
+                            item.removeClass("d-none")
+                            item.attr("display", true);
+                        }
+                    });
+                    $("fieldset").on("click", "#tabeldisplaybtn", function () {
+                        var item = $("#tablecostview");
+
+                        if (item.attr("display") == "true") {
+                            item.addClass("d-none")
+                            item.attr("display", false);
+                        } else {
+                            item.removeClass("d-none")
+                            item.attr("display", true);
+                        }
+                    });
+                },
+                error: function () {
+                    var url = "@Url.Action("PreviewAJAXERROR", "Boxes", new { Id = Model.Id })";
+                    $(location).attr('href', url);
+                }
+            });
+        });
+    </script>
+}

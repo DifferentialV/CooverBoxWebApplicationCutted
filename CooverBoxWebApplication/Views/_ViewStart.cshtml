@@ -1,0 +1,18 @@
+﻿@{
+    var controllerName = "";
+    object controllerObj;
+
+    if (ViewContext.RouteData.Values.TryGetValue("controller", out controllerObj))
+    {
+        controllerName = controllerObj.ToString();
+    }
+    if(controllerName.Contains("Department"))
+    {
+        Layout = @"~/Views/Department/_Layout_Department.cshtml";
+    }
+    else
+    {
+        Layout = @"~/Views/Shared/_Layout.cshtml";
+    }
+}
+

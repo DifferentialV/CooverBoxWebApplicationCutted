@@ -1,0 +1,30 @@
+﻿@model CooverBoxWebApplication.InputValues.InputValuesInfo.ListIsolonInputValue
+@{
+    Layout = null;
+
+}
+@inject CooverBoxWebApplication.Services.MaterialsService materials
+
+<div class="form-group col-auto row">
+    <label class="control-label  col-md-3 col-xs-12" for="@Model.Name">@Model.DisplayName</label>
+    <div class="col-md-9 col-xs-12">
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            <select class="form-control" type="text"
+                    id=@($"{Model.Name}_{i}") name=@($"{Model.Name}_{i}")
+                    >
+                @if (!string.IsNullOrEmpty(Model.AddOption))
+                {
+                    <option value="@Model.AddOption">@Model.AddOption</option>
+
+                }
+                @foreach (var isolon in materials.Isolons)
+                {
+                    <option @Html.Raw((Model.AlwaysDefault == false && Model.GetValue(ViewBag._model)?.Count > i && Model.GetValue(ViewBag._model)[i].Id == isolon.Id) ? "selected" : "") value="@isolon.Id">@($"{isolon.Name} {isolon.Color} {isolon.Thickness}мм")</option>
+                }
+
+            </select>
+
+        }
+    </div>
+</div>
